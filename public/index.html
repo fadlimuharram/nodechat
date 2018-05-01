@@ -14,11 +14,20 @@
         <button>Send</button>
     </form>
 
+    <script id="pesanTemplate" type="text/template">
+        <li>{{from}} {{time}} : {{text}}</li>
+    </script>
+
+    <script id="pesanLokasiTemplate" type="text/template">
+        <li>{{from}} {{time}} : <a href="{{url}}" target="_blank">Lokasi</a></li>
+    </script>
+
     <button id="kirim-lokasi">Kirim Lokasi</button>
 
     <script src="socket.io/socket.io.js"></script>
     <script src="libs/jquery-3.3.1.min.js"></script>
     <script src="libs/moment.js"></script>
+    <script src="libs/mustache.min.js"></script>
     <script src="js/index.js"></script>
 </body>
 </html>

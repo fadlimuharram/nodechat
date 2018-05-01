@@ -1,5 +1,8 @@
 
 var socket = io();
+var formattedTIme = function(data){
+    return moment(data.createdAt).format('h:mm a');
+};
 
 socket.on('connect',function(){
     console.log('Koneksi Berhasil');
@@ -11,25 +14,35 @@ socket.on('disconnect',function(){
 });
 
 socket.on('pesanBaru',function(data){
-    var formattedTIme = moment(data.createdAt).format('h:mm a');
-    console.log('Pesan Baru : ',data);
-    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: ${data.text}`);
-    $('#pesanData').append(li);
+
+    var template = $('#pesanTemplate').html();
+    var html = Mustache.render(template,{
+        text:data.text,
+        from:data.from,
+        time : formattedTIme(data)
+    });
+    $('#pesanData').append(html);
+
 });
 
 socket.on('selamatDatang',function(data){
-    var formattedTIme = moment(data.createdAt).format('h:mm a');
-    console.log(data);
-    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: ${data.text}`);
-    $('#pesanData').append(li);
+    var template = $('#pesanTemplate').html();
+    var html = Mustache.render(template,{
+        text:data.text,
+        from:data.from,
+        time : formattedTIme(data)
+    });
+    $('#pesanData').append(html);
 });
 
 socket.on('pesanLokasiBaru',function(data){
-    var formattedTIme = moment(data.createdAt).format('h:mm a');
-    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: `);
-    var a = $('<a target="_blank">Lokasi Saya</a>').attr('href',data.url);
-    li.append(a);
-    $('#pesanData').append(li);
+    var template = $('#pesanLokasiTemplate').html();
+    var html = Mustache.render(template,{
+        url:data.url,
+        from:data.from,
+        time : formattedTIme(data)
+    });
+    $('#pesanData').append(html);
 })
 
 $('#pesan-form').on('submit',function(e){
