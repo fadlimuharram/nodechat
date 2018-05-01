@@ -28,6 +28,13 @@ socket.on('selamatDatang',function(data){
     $('#pesanData').append(li);
 });
 
+socket.on('pesanLokasiBaru',function(data){
+    var li = $('<li></li>').text(`${data.from}: `);
+    var a = $('<a target="_blank">Lokasi Saya</a>').attr('href',data.url);
+    li.append(a);
+    $('#pesanData').append(li);
+})
+
 $('#pesan-form').on('submit',function(e){
     e.preventDefault();
     socket.emit('buatPesan',{
@@ -36,5 +43,25 @@ $('#pesan-form').on('submit',function(e){
     },function(){
 
     });
+});
+
+var lokasiBtn = $('#kirim-lokasi');
+
+lokasiBtn.on('click',function(e){
+    e.preventDefault();
+    if(!navigator.geolocation){
+        return alert('Geolaction tidak di support oleh browser anda');
+    }
+
+    navigator.geolocation.getCurrentPosition(function(posisi){
+//        console.log(posisi);
+        socket.emit('buatLokasiPesan',{
+            latitude:posisi.coords.latitude,
+            longitude:posisi.coords.longitude
+        });
+    },function(error){
+        console.log(error);
+        alert(error.message);
+    })
 });
 

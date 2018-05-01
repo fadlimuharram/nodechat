@@ -9,7 +9,7 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
-var {generateMessage} = require('./utils/message');
+var {generateMessage,generateLocationMessage} = require('./utils/message');
 
 app.use(express.static(publicPath));
 
@@ -37,6 +37,10 @@ io.on('connection',(socket)=>{
         //     dibuat:new Date().getTime()   
         // });
     });
+
+    socket.on('buatLokasiPesan',(cords)=>{
+        io.emit('pesanLokasiBaru',generateLocationMessage('User',cords.latitude,cords.longitude));
+    })
 
     socket.on('disconnect',()=>{
         console.log('Disconnecter dari server');
