@@ -16,13 +16,6 @@ app.use(express.static(publicPath));
 io.on('connection',(socket)=>{
     console.log('new user connected');
 
-
-    // socket.emit('pesanBaru',{
-    //     dari:'fadli@tes.com',
-    //     text:'ini textnya',
-    //     dibuat:5654987451
-    // });
-
     socket.emit('selamatDatang',generateMessage('Admin','Selamat Datang, Anda Bergabung Dengan Chat Kami'));
 
     socket.broadcast.emit('selamatDatang',generateMessage('Admin','User Baru Bergabung Dalam Room Chat'));
@@ -31,11 +24,6 @@ io.on('connection',(socket)=>{
         console.log('Pesan Baru : ',pesanBaru);
         io.emit('pesanBaru',generateMessage(pesanBaru.from,pesanBaru.text));
         callback('ini dari server');
-        // socket.broadcast.emit('pesanBaru',{
-        //     dari:pesanBaru.dari,
-        //     text:pesanBaru.text,
-        //     dibuat:new Date().getTime()   
-        // });
     });
 
     socket.on('buatLokasiPesan',(cords)=>{

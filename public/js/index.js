@@ -1,14 +1,8 @@
+
 var socket = io();
 
 socket.on('connect',function(){
     console.log('Koneksi Berhasil');
-
-    // socket.emit('buatPesan',{
-    //     dari: 'tes@tes.com',
-    //     text:'hallo'
-    // },function(data){
-    //     console.log(data);
-    // });
 
 });
 
@@ -17,19 +11,22 @@ socket.on('disconnect',function(){
 });
 
 socket.on('pesanBaru',function(data){
+    var formattedTIme = moment(data.createdAt).format('h:mm a');
     console.log('Pesan Baru : ',data);
-    var li = $('<li></li>').text(`${data.from} : ${data.text}`);
+    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: ${data.text}`);
     $('#pesanData').append(li);
 });
 
 socket.on('selamatDatang',function(data){
+    var formattedTIme = moment(data.createdAt).format('h:mm a');
     console.log(data);
-    var li = $('<li></li>').text(`${data.from} : ${data.text}`);
+    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: ${data.text}`);
     $('#pesanData').append(li);
 });
 
 socket.on('pesanLokasiBaru',function(data){
-    var li = $('<li></li>').text(`${data.from}: `);
+    var formattedTIme = moment(data.createdAt).format('h:mm a');
+    var li = $('<li></li>').text(`${data.from} ${formattedTIme}: `);
     var a = $('<a target="_blank">Lokasi Saya</a>').attr('href',data.url);
     li.append(a);
     $('#pesanData').append(li);
@@ -54,7 +51,6 @@ lokasiBtn.on('click',function(e){
     }
 
     navigator.geolocation.getCurrentPosition(function(posisi){
-//        console.log(posisi);
         socket.emit('buatLokasiPesan',{
             latitude:posisi.coords.latitude,
             longitude:posisi.coords.longitude
