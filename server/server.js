@@ -27,9 +27,10 @@ io.on('connection',(socket)=>{
 
     socket.broadcast.emit('selamatDatang',generateMessage('Admin','User Baru Bergabung Dalam Room Chat'));
 
-    socket.on('buatPesan',(pesanBaru)=>{
+    socket.on('buatPesan',(pesanBaru, callback)=>{
         console.log('Pesan Baru : ',pesanBaru);
-        io.emit('pesanBaru',generateMessage(pesanBaru.dari,pesanBaru.text));
+        io.emit('pesanBaru',generateMessage(pesanBaru.from,pesanBaru.text));
+        callback('ini dari server');
         // socket.broadcast.emit('pesanBaru',{
         //     dari:pesanBaru.dari,
         //     text:pesanBaru.text,
