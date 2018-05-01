@@ -9,6 +9,8 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
+var {generateMessage} = require('./utils/message');
+
 app.use(express.static(publicPath));
 
 io.on('connection',(socket)=>{
@@ -21,25 +23,13 @@ io.on('connection',(socket)=>{
     //     dibuat:5654987451
     // });
 
-    socket.emit('selamatDatang',{
-        dari:'Admin',
-        text:'Selamat Datang, Anda Bergabung Dengan Chat Kami',
-        dibuat:new Date().getTime()
-    });
+    socket.emit('selamatDatang',generateMessage('Admin','Selamat Datang, Anda Bergabung Dengan Chat Kami'));
 
-    socket.broadcast.emit('selamatDatang',{
-        dari:'Admin',
-        text:'User Baru Bergabung Dalam Room Chat',
-        dibuat:new Date().getTime()
-    });
+    socket.broadcast.emit('selamatDatang',generateMessage('Admin','User Baru Bergabung Dalam Room Chat'));
 
     socket.on('buatPesan',(pesanBaru)=>{
         console.log('Pesan Baru : ',pesanBaru);
-        io.emit('pesanBaru',{
-            dari:pesanBaru.dari,
-            text:pesanBaru.text,
-            dibuat:new Date().getTime()
-        });
+        io.emit('pesanBaru',generateMessage(pesanBaru.dari,pesanBaru.text));
         // socket.broadcast.emit('pesanBaru',{
         //     dari:pesanBaru.dari,
         //     text:pesanBaru.text,
