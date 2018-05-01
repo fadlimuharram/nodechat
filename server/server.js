@@ -18,14 +18,19 @@ io.on('connection',(socket)=>{
         console.log('Disconnecter dari server');
     });
 
-    socket.emit('pesanBaru',{
-        dari:'fadli@tes.com',
-        text:'ini textnya',
-        dibuat:5654987451
-    });
+    // socket.emit('pesanBaru',{
+    //     dari:'fadli@tes.com',
+    //     text:'ini textnya',
+    //     dibuat:5654987451
+    // });
 
     socket.on('buatPesan',(pesanBaru)=>{
         console.log('Pesan Baru : ',pesanBaru);
+        io.emit('pesanBaru',{
+            dari:pesanBaru.dari,
+            text:pesanBaru.text,
+            dibuat:5654987451
+        });
     })
 });
 

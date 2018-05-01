@@ -3,10 +3,10 @@ var socket = io();
 socket.on('connect',function(){
     console.log('Koneksi Berhasil');
 
-    socket.emit('buatPesan',{
-        untuk: 'tes@tes.com',
-        text:'hallo'
-    });
+    // socket.emit('buatPesan',{
+    //     untuk: 'tes@tes.com',
+    //     text:'hallo'
+    // });
 });
 
 socket.on('disconnect',function(){
