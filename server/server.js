@@ -14,9 +14,6 @@ app.use(express.static(publicPath));
 io.on('connection',(socket)=>{
     console.log('new user connected');
 
-    socket.on('disconnect',()=>{
-        console.log('Disconnecter dari server');
-    });
 
     // socket.emit('pesanBaru',{
     //     dari:'fadli@tes.com',
@@ -24,14 +21,36 @@ io.on('connection',(socket)=>{
     //     dibuat:5654987451
     // });
 
+    socket.emit('selamatDatang',{
+        dari:'Admin',
+        text:'Selamat Datang, Anda Bergabung Dengan Chat Kami',
+        dibuat:new Date().getTime()
+    });
+
+    socket.broadcast.emit('selamatDatang',{
+        dari:'Admin',
+        text:'User Baru Bergabung Dalam Room Chat',
+        dibuat:new Date().getTime()
+    });
+
     socket.on('buatPesan',(pesanBaru)=>{
         console.log('Pesan Baru : ',pesanBaru);
         io.emit('pesanBaru',{
             dari:pesanBaru.dari,
             text:pesanBaru.text,
-            dibuat:5654987451
+            dibuat:new Date().getTime()
         });
-    })
+        // socket.broadcast.emit('pesanBaru',{
+        //     dari:pesanBaru.dari,
+        //     text:pesanBaru.text,
+        //     dibuat:new Date().getTime()   
+        // });
+    });
+
+    socket.on('disconnect',()=>{
+        console.log('Disconnecter dari server');
+    });
+
 });
 
 

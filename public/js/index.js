@@ -16,3 +16,7 @@ socket.on('disconnect',function(){
 socket.on('pesanBaru',function(data){
     console.log('Pesan Baru : ',data);
 });
+
+socket.on('selamatDatang',function(data){
+    console.log(data);
+});
