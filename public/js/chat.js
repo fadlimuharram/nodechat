@@ -64,10 +64,9 @@ socket.on('pesanLokasiBaru',function(data){
 $('#pesan-form').on('submit',function(e){
     e.preventDefault();
     socket.emit('buatPesan',{
-        from:param.name,
         text:$('[name=pesan]').val()
-    },function(){
-
+    },function(e){
+        alert(e);
     });
 });
 

@@ -23,13 +23,21 @@ io.on('connection',(socket)=>{
     
 
     socket.on('buatPesan',(pesanBaru, callback)=>{
-        console.log('Pesan Baru : ',pesanBaru);
-        io.emit('pesanBaru',generateMessage(pesanBaru.from,pesanBaru.text));
-        callback('ini dari server');
+        var user = users.getUser(socket.id);
+        if(user && isRealString(pesanBaru.text)){
+            io.to(user.room).emit('pesanBaru',generateMessage(user.name,pesanBaru.text));
+        }else{
+            callback('user tidak di temukan');
+        }
+        
+        //callback('ini dari server');
     });
 
     socket.on('buatLokasiPesan',(cords)=>{
-        io.emit('pesanLokasiBaru',generateLocationMessage('User',cords.latitude,cords.longitude));
+        var user = users.getUser(socket.id);
+        if(user){
+            io.to(user.room).emit('pesanLokasiBaru',generateLocationMessage(user.name,cords.latitude,cords.longitude));
+        }
     })
 
     socket.on('join',(param,callback)=>{
