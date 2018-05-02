@@ -3,10 +3,26 @@ var socket = io();
 var formattedTIme = function(data){
     return moment(data.createdAt).format('h:mm a');
 };
+var param = $.deparam(window.location.search);
 
 socket.on('connect',function(){
-    console.log('Koneksi Berhasil');
+    //console.log('Koneksi Berhasil');
+    socket.emit('join',param,function(error){
+        if(error){
+            alert(error);
+            window.location.href = '/';
+        }else{
+            console.log('No Error');
+        }
+    });
+});
 
+socket.on('updateUserList',function(users){
+    var ol = $('<ol></ol>');
+    users.forEach(function(user){
+        ol.append($('<li></li>').text(user));
+    });
+    $('#daftarUser').html(ol);
 });
 
 socket.on('disconnect',function(){
@@ -48,7 +64,7 @@ socket.on('pesanLokasiBaru',function(data){
 $('#pesan-form').on('submit',function(e){
     e.preventDefault();
     socket.emit('buatPesan',{
-        from:'fadli',
+        from:param.name,
         text:$('[name=pesan]').val()
     },function(){
 

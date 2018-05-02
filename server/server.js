@@ -9,16 +9,18 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
-var {generateMessage,generateLocationMessage} = require('./utils/message');
+const {generateMessage,generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
+var {Users} = require('./utils/users');
+
+var users = new Users;
 
 app.use(express.static(publicPath));
 
 io.on('connection',(socket)=>{
     console.log('new user connected');
 
-    socket.emit('selamatDatang',generateMessage('Admin','Selamat Datang, Anda Bergabung Dengan Chat Kami'));
-
-    socket.broadcast.emit('selamatDatang',generateMessage('Admin','User Baru Bergabung Dalam Room Chat'));
+    
 
     socket.on('buatPesan',(pesanBaru, callback)=>{
         console.log('Pesan Baru : ',pesanBaru);
@@ -30,9 +32,28 @@ io.on('connection',(socket)=>{
         io.emit('pesanLokasiBaru',generateLocationMessage('User',cords.latitude,cords.longitude));
     })
 
-    socket.on('disconnect',()=>{
-        console.log('Disconnecter dari server');
+    socket.on('join',(param,callback)=>{
+        if(!isRealString(param.name) || !isRealString(param.room)){
+            callback('Nama dan room name tidak boleh kosong');
+        }
+        socket.join(param.room);
+        users.removeUser(socket.id);
+        users.addUser(socket.id,param.name,param.room);
+
+        io.to(param.room).emit('updateUserList',users.getUserList(param.room));
+        socket.emit('selamatDatang',generateMessage('Admin','Selamat Datang, Anda Bergabung Dengan Chat Kami'));
+        socket.broadcast.to(param.room).emit('selamatDatang',generateMessage('Admin',`${param.name} Bergabung dalam chat`));
+        callback();
     });
+
+    socket.on('disconnect',()=>{
+        var user = users.removeUser(socket.id);
+        if(user){
+            io.to(user.room).emit('updateUserList',users.getUserList(user.room));
+            io.to(user.room).emit('pesanBaru',generateMessage('Admin',`${user.name} sudah keluar`));
+        }
+    });
+
 
 });
 

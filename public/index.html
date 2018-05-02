@@ -2,32 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Join Chat App</title>
 </head>
 <body>
 
-    <ol id="pesanData"></ol>
-    <form id="pesan-form">
-        <input type="text" name="pesan">
-        <button>Send</button>
+    <form action="./chat.html">
+        Nama : <input type="text" name="name" autofocus/> <br />
+        Room : <input type="text" name="room"/><br />
+        <button type="submit">Join</button>
     </form>
-
-    <script id="pesanTemplate" type="text/template">
-        <li>{{from}} {{time}} : {{text}}</li>
-    </script>
-
-    <script id="pesanLokasiTemplate" type="text/template">
-        <li>{{from}} {{time}} : <a href="{{url}}" target="_blank">Lokasi</a></li>
-    </script>
-
-    <button id="kirim-lokasi">Kirim Lokasi</button>
-
-    <script src="socket.io/socket.io.js"></script>
-    <script src="libs/jquery-3.3.1.min.js"></script>
-    <script src="libs/moment.js"></script>
-    <script src="libs/mustache.min.js"></script>
-    <script src="js/index.js"></script>
+    
 </body>
 </html>
